@@ -2,7 +2,8 @@ import './style.scss'
 
 import { VFX } from '@vfx-js/core';
 import { BloomEffect, PixelateEffect } from '@vfx-js/effects';
-import { domReady } from './_dom_utils';
+import { domReady, getComputedOpacity } from './_dom_utils';
+import { OpacityEffect } from './effects/opacity-effect';
 
 
 function setupVfxJs() {
@@ -23,21 +24,26 @@ function setupVfxJs() {
 
 
 
-  const heroTitleImageElement = document.querySelector<HTMLElement>('.p-home-section-hero__title-image')!;
-  const pixcelateEffect = new PixelateEffect({ size: 10 });
-  const bloomEffect = new BloomEffect({ intensity: 5 });
-  vfx.add(heroTitleImageElement, {
-    effect: [pixcelateEffect, bloomEffect],
-    zIndex: 2,
-  });
-  setInterval(() => {
-    pixcelateEffect.setParams({
-      size: Math.round(window.innerWidth / 100),
+  {
+    const heroTitleElement = document.querySelector<HTMLElement>('.p-home-section-hero__title')!;
+    const heroTitleImageElement = document.querySelector<HTMLElement>('.p-home-section-hero__title-image')!;
+    const pixcelateEffect = new PixelateEffect({ size: 10 });
+    const bloomEffect = new BloomEffect({ intensity: 5 });
+    const opacityEffect = new OpacityEffect({ opacity: getComputedOpacity(heroTitleElement) });
+    vfx.add(heroTitleImageElement, {
+      effect: [pixcelateEffect, bloomEffect, opacityEffect],
+      zIndex: 2,
     });
-    // bloomEffect.setParams({
-    //   pad:Math.round(window.innerWidth / 100),
-    // });
-  }, 100);
+    setInterval(() => {
+      pixcelateEffect.setParams({
+        size: Math.round(window.innerWidth / 100),
+      });
+      console.log(getComputedOpacity(heroTitleElement));
+      opacityEffect.setParams({
+        opacity: getComputedOpacity(heroTitleElement),
+      });
+    }, 10);
+  }
 
   document.querySelectorAll<HTMLElement>(".p-home-section-hero__balloon-image, .p-home-section-hero__badge-image, .p-home-section-hero__date-image").forEach((element) => {
     vfx.add(element, {

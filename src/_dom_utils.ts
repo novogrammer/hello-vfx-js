@@ -18,3 +18,8 @@ export function getVwToPx() {
   return width / 100;
 
 }
+
+export function getComputedOpacity(element: HTMLElement): number {
+  const opacity = Number.parseFloat(getComputedStyle(element).opacity);
+  return Number.isFinite(opacity) ? opacity : 1;
+}
