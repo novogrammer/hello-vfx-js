@@ -1,24 +1,25 @@
 import './style.scss'
 
 import { VFX } from '@vfx-js/core';
-import { BloomEffect, PixelateEffect } from '@vfx-js/effects';
+import { BloomEffect, PixelateEffect,HalftoneEffect } from '@vfx-js/effects';
 import { domReady } from './_dom_utils';
 
 
-domReady(()=>{
-
-
+function setupVfxJs(){
   const vfx = new VFX();
 
 
   const heroHumanImageElement = document.querySelector<HTMLElement>('.p-home-section-hero__human-image')!;
+
   vfx.add(heroHumanImageElement, {
-    shader: "halftone",
+    shader:"halftone",
     zIndex:1,
   });
   setInterval(()=>{
     vfx.update(heroHumanImageElement);
   },100);
+
+
 
 
 
@@ -40,7 +41,7 @@ domReady(()=>{
 
   document.querySelectorAll<HTMLElement>(".p-home-section-hero__balloon-image, .p-home-section-hero__badge-image, .p-home-section-hero__date-image").forEach((element)=>{
       vfx.add(element, {
-        shader: "halftone",
+        shader:"halftone",
         zIndex:3,
       });
 
@@ -54,6 +55,17 @@ domReady(()=>{
   // setInterval(()=>{
   //   vfx.update(heroElement);
   // },100);
+
+}
+
+domReady(()=>{
+  const params = new URLSearchParams(location.search);
+  const vfxJsEnabled = params.get('vfx-js') !== '0';
+
+  if(vfxJsEnabled){
+    setupVfxJs();
+  }
+
 
 })
 
