@@ -67,10 +67,10 @@ function setupVfxToggleLink(vfxJsEnabled: boolean) {
   const url = new URL(location.href);
   if (vfxJsEnabled) {
     url.searchParams.set('vfx-js', '0');
-    toggleLink.textContent = 'VFXをOFFにする';
+    toggleLink.textContent = 'vfx-jsをOFFにする';
   } else {
     url.searchParams.delete('vfx-js');
-    toggleLink.textContent = 'VFXをONにする';
+    toggleLink.textContent = 'vfx-jsをONにする';
   }
 
   toggleLink.href = url.toString();
