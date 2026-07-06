@@ -1,7 +1,7 @@
 import './style.scss'
 
 import { VFX } from '@vfx-js/core';
-import { BloomEffect, PixelateEffect } from '@vfx-js/effects';
+import { BloomEffect, HalftoneEffect, PixelateEffect } from '@vfx-js/effects';
 import { domReady, getComputedOpacity } from './_dom_utils';
 import { OpacityEffect } from './effects/opacity-effect';
 
@@ -10,15 +10,21 @@ function setupVfxJs() {
   const vfx = new VFX();
 
 
-  const heroHumanImageElement = document.querySelector<HTMLElement>('.p-home-section-hero__human-image')!;
+  const addHalftoneWithOpacity=(element:HTMLElement,zIndex:number)=>{
+    const imageElement = element.querySelector<HTMLElement>('img')!;
+    const heroDateHalftoneEffect = new HalftoneEffect();
+    const opacityEffect = new OpacityEffect({ opacity: getComputedOpacity(element) });
+    vfx.add(imageElement, {
+      effect: [heroDateHalftoneEffect,opacityEffect],
+      zIndex,
+    });
+    setInterval(() => {
+      opacityEffect.setParams({opacity:getComputedOpacity(element)})
+      vfx.update(imageElement);
+    }, 100);
+  };
 
-  vfx.add(heroHumanImageElement, {
-    shader: "halftone",
-    zIndex: 1,
-  });
-  setInterval(() => {
-    vfx.update(heroHumanImageElement);
-  }, 100);
+  addHalftoneWithOpacity(document.querySelector<HTMLElement>('.p-home-section-hero__human')!,1);
 
 
 
@@ -38,20 +44,22 @@ function setupVfxJs() {
       pixcelateEffect.setParams({
         size: Math.round(window.innerWidth / 100),
       });
-      console.log(getComputedOpacity(heroTitleElement));
       opacityEffect.setParams({
         opacity: getComputedOpacity(heroTitleElement),
       });
     }, 10);
   }
 
-  document.querySelectorAll<HTMLElement>(".p-home-section-hero__balloon-image, .p-home-section-hero__badge-image, .p-home-section-hero__date-image").forEach((element) => {
-    vfx.add(element, {
-      shader: "halftone",
-      zIndex: 3,
-    });
 
-  })
+  addHalftoneWithOpacity(document.querySelector<HTMLElement>('.p-home-section-hero__badge')!,3);
+
+
+  addHalftoneWithOpacity(document.querySelector<HTMLElement>('.p-home-section-hero__date')!,3);
+
+  addHalftoneWithOpacity(document.querySelector<HTMLElement>('.p-home-section-hero__balloon--01')!,3);
+  addHalftoneWithOpacity(document.querySelector<HTMLElement>('.p-home-section-hero__balloon--02')!,3);
+  addHalftoneWithOpacity(document.querySelector<HTMLElement>('.p-home-section-hero__balloon--03')!,3);
+  addHalftoneWithOpacity(document.querySelector<HTMLElement>('.p-home-section-hero__balloon--04')!,3);
 
 
   // const heroElement = document.querySelector<HTMLElement>('.p-home-section-hero')!;
