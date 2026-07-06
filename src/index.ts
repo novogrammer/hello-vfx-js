@@ -1,23 +1,23 @@
 import './style.scss'
 
 import { VFX } from '@vfx-js/core';
-import { BloomEffect, PixelateEffect,HalftoneEffect } from '@vfx-js/effects';
+import { BloomEffect, PixelateEffect } from '@vfx-js/effects';
 import { domReady } from './_dom_utils';
 
 
-function setupVfxJs(){
+function setupVfxJs() {
   const vfx = new VFX();
 
 
   const heroHumanImageElement = document.querySelector<HTMLElement>('.p-home-section-hero__human-image')!;
 
   vfx.add(heroHumanImageElement, {
-    shader:"halftone",
-    zIndex:1,
+    shader: "halftone",
+    zIndex: 1,
   });
-  setInterval(()=>{
+  setInterval(() => {
     vfx.update(heroHumanImageElement);
-  },100);
+  }, 100);
 
 
 
@@ -28,22 +28,22 @@ function setupVfxJs(){
   const bloomEffect = new BloomEffect({ intensity: 5 });
   vfx.add(heroTitleImageElement, {
     effect: [pixcelateEffect, bloomEffect],
-    zIndex:2,
+    zIndex: 2,
   });
-  setInterval(()=>{
+  setInterval(() => {
     pixcelateEffect.setParams({
-      size:Math.round(window.innerWidth / 100),
+      size: Math.round(window.innerWidth / 100),
     });
     // bloomEffect.setParams({
     //   pad:Math.round(window.innerWidth / 100),
     // });
-  },100);
+  }, 100);
 
-  document.querySelectorAll<HTMLElement>(".p-home-section-hero__balloon-image, .p-home-section-hero__badge-image, .p-home-section-hero__date-image").forEach((element)=>{
-      vfx.add(element, {
-        shader:"halftone",
-        zIndex:3,
-      });
+  document.querySelectorAll<HTMLElement>(".p-home-section-hero__balloon-image, .p-home-section-hero__badge-image, .p-home-section-hero__date-image").forEach((element) => {
+    vfx.add(element, {
+      shader: "halftone",
+      zIndex: 3,
+    });
 
   })
 
@@ -58,14 +58,31 @@ function setupVfxJs(){
 
 }
 
-domReady(()=>{
+function setupVfxToggleLink(vfxJsEnabled: boolean) {
+  const toggleLink = document.querySelector<HTMLAnchorElement>('.js-vfx-toggle');
+  if (!toggleLink) {
+    return;
+  }
+
+  const url = new URL(location.href);
+  if (vfxJsEnabled) {
+    url.searchParams.set('vfx-js', '0');
+    toggleLink.textContent = 'VFXをOFFにする';
+  } else {
+    url.searchParams.delete('vfx-js');
+    toggleLink.textContent = 'VFXをONにする';
+  }
+
+  toggleLink.href = url.toString();
+}
+
+domReady(() => {
   const params = new URLSearchParams(location.search);
   const vfxJsEnabled = params.get('vfx-js') !== '0';
 
-  if(vfxJsEnabled){
+  setupVfxToggleLink(vfxJsEnabled);
+
+  if (vfxJsEnabled) {
     setupVfxJs();
   }
-
-
 })
-
