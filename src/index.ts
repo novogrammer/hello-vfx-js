@@ -13,7 +13,9 @@ function setupVfxJs() {
     const imageElement = element.querySelector<HTMLElement>('img')!;
     vfx.add(imageElement, {
       shader: [
-        { frag: shaders.halftone },
+        {
+          frag: shaders.pixelate,
+        },
         createOpacityPass(() => getComputedOpacity(element)),
       ],
       zIndex,
@@ -31,7 +33,9 @@ function setupVfxJs() {
     const heroTitleImageElement = document.querySelector<HTMLElement>('.p-home-section-hero__title-image')!;
     vfx.add(heroTitleImageElement, {
       shader: [
-        { frag: shaders.halftone },
+        {
+          frag: shaders.rgbShift,
+        },
         createOpacityPass(() => getComputedOpacity(heroTitleElement)),
       ],
       zIndex: 2,
