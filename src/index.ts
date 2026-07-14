@@ -14,10 +14,11 @@ function setupVfxJs() {
     vfx.add(imageElement, {
       shader: [
         {
-          frag: shaders.pixelate,
+          frag: shaders.rgbShift,
         },
         createOpacityPass(() => getComputedOpacity(element)),
       ],
+      overflow:100,
       zIndex,
     });
   };
@@ -34,10 +35,11 @@ function setupVfxJs() {
     vfx.add(heroTitleImageElement, {
       shader: [
         {
-          frag: shaders.rgbShift,
+          frag: shaders.sinewave,
         },
         createOpacityPass(() => getComputedOpacity(heroTitleElement)),
       ],
+      overflow:100,
       zIndex: 2,
     });
   }
