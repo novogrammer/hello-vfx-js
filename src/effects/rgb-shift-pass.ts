@@ -17,6 +17,7 @@ uniform float speed;
 uniform float threshold;
 uniform float channelOffset;
 uniform float duration;
+uniform float opacity;
 
 out vec4 outColor;
 
@@ -66,7 +67,8 @@ void main() {
     colorR.r,
     colorG.g,
     colorB.b,
-    smoothstep(0.0, 1.0, colorR.a + colorG.a + colorB.a)
+    smoothstep(0.0, 1.0, colorR.a + colorG.a + colorB.a) *
+      clamp(opacity, 0.0, 1.0)
   );
 }
 `;
@@ -78,6 +80,7 @@ export type RgbShiftPassParams = {
   threshold?: ValueOrGetter<number>;
   channelOffset?: ValueOrGetter<number>;
   duration?: ValueOrGetter<number>;
+  opacity?: ValueOrGetter<number>;
 };
 
 export function createRgbShiftPass({
@@ -87,6 +90,7 @@ export function createRgbShiftPass({
   threshold = 1,
   channelOffset = 10,
   duration = 30,
+  opacity = 1,
 }: RgbShiftPassParams = {}): VFXPass {
   return {
     frag: FRAG_RGB_SHIFT,
@@ -97,6 +101,7 @@ export function createRgbShiftPass({
       threshold,
       channelOffset,
       duration,
+      opacity,
     },
   };
 }

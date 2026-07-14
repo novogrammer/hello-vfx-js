@@ -16,6 +16,7 @@ uniform float frequency;
 uniform float speed;
 uniform float phase;
 uniform float blur;
+uniform float opacity;
 
 out vec4 outColor;
 
@@ -55,6 +56,7 @@ void main() {
   vec2 uv = (gl_FragCoord.xy - offset) / resolution;
   vec2 dx = vec2(blur, 0.0) / resolution.x;
   outColor = (draw(uv) * 2.0 + draw(uv + dx) + draw(uv - dx)) / 4.0;
+  outColor.a *= clamp(opacity, 0.0, 1.0);
 }
 `;
 
@@ -64,6 +66,7 @@ export type SinewavePassParams = {
   speed?: ValueOrGetter<number>;
   phase?: ValueOrGetter<number>;
   blur?: ValueOrGetter<number>;
+  opacity?: ValueOrGetter<number>;
 };
 
 export function createSinewavePass({
@@ -72,6 +75,7 @@ export function createSinewavePass({
   speed = 3,
   phase = 0.4,
   blur = 2,
+  opacity = 1,
 }: SinewavePassParams = {}): VFXPass {
   return {
     frag: FRAG_SINEWAVE,
@@ -81,6 +85,7 @@ export function createSinewavePass({
       speed,
       phase,
       blur,
+      opacity,
     },
   };
 }

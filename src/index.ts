@@ -2,7 +2,6 @@ import './style.scss'
 
 import { VFX } from '@vfx-js/core';
 import { domReady, getComputedOpacity } from './_dom_utils';
-import { createOpacityPass } from './effects/opacity-pass';
 import { createRgbShiftPass } from './effects/rgb-shift-pass';
 import { createSinewavePass } from './effects/sinewave-pass';
 
@@ -16,8 +15,9 @@ function setupVfxJs() {
     vfx.add(imageElement, {
       shader: [
         createRgbShiftPass({
+          amplitude:20,
+          opacity: () => getComputedOpacity(element),
         }),
-        createOpacityPass(() => getComputedOpacity(element)),
       ],
       overflow:100,
       zIndex,
@@ -40,8 +40,8 @@ function setupVfxJs() {
           frequency:50,
           phase:1.0,
           blur:10,
+          opacity: () => getComputedOpacity(heroTitleElement),
         }),
-        createOpacityPass(() => getComputedOpacity(heroTitleElement)),
       ],
       overflow:100,
       zIndex: 2,
