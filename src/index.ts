@@ -1,8 +1,10 @@
 import './style.scss'
 
-import { shaders, VFX } from '@vfx-js/core';
+import { VFX } from '@vfx-js/core';
 import { domReady, getComputedOpacity } from './_dom_utils';
 import { createOpacityPass } from './effects/opacity-pass';
+import { createRgbShiftPass } from './effects/rgb-shift-pass';
+import { createSinewavePass } from './effects/sinewave-pass';
 
 
 function setupVfxJs() {
@@ -13,9 +15,8 @@ function setupVfxJs() {
     const imageElement = element.querySelector<HTMLElement>('img')!;
     vfx.add(imageElement, {
       shader: [
-        {
-          frag: shaders.rgbShift,
-        },
+        createRgbShiftPass({
+        }),
         createOpacityPass(() => getComputedOpacity(element)),
       ],
       overflow:100,
@@ -34,9 +35,12 @@ function setupVfxJs() {
     const heroTitleImageElement = document.querySelector<HTMLElement>('.p-home-section-hero__title-image')!;
     vfx.add(heroTitleImageElement, {
       shader: [
-        {
-          frag: shaders.sinewave,
-        },
+        createSinewavePass({
+          amplitude:10,
+          frequency:50,
+          phase:1.0,
+          blur:10,
+        }),
         createOpacityPass(() => getComputedOpacity(heroTitleElement)),
       ],
       overflow:100,
