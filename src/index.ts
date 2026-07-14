@@ -1,9 +1,8 @@
 import './style.scss'
 
-import { VFX } from '@vfx-js/core';
-import { BloomEffect, HalftoneEffect, PixelateEffect } from '@vfx-js/effects';
+import { shaders, VFX } from '@vfx-js/core';
 import { domReady, getComputedOpacity } from './_dom_utils';
-import { OpacityEffect } from './effects/opacity-effect';
+import { createOpacityPass } from './effects/opacity-pass';
 
 
 function setupVfxJs() {
@@ -12,19 +11,16 @@ function setupVfxJs() {
 
   const addHalftoneWithOpacity=(element:HTMLElement,zIndex:number)=>{
     const imageElement = element.querySelector<HTMLElement>('img')!;
-    const heroDateHalftoneEffect = new HalftoneEffect();
-    const opacityEffect = new OpacityEffect({ opacity: getComputedOpacity(element) });
     vfx.add(imageElement, {
-      effect: [heroDateHalftoneEffect,opacityEffect],
+      shader: [
+        { frag: shaders.halftone },
+        createOpacityPass(() => getComputedOpacity(element)),
+      ],
       zIndex,
     });
-    setInterval(() => {
-      opacityEffect.setParams({opacity:getComputedOpacity(element)})
-      vfx.update(imageElement);
-    }, 100);
   };
 
-  addHalftoneWithOpacity(document.querySelector<HTMLElement>('.p-home-section-hero__human')!,1);
+  // addHalftoneWithOpacity(document.querySelector<HTMLElement>('.p-home-section-hero__human')!,1);
 
 
 
@@ -33,21 +29,13 @@ function setupVfxJs() {
   {
     const heroTitleElement = document.querySelector<HTMLElement>('.p-home-section-hero__title')!;
     const heroTitleImageElement = document.querySelector<HTMLElement>('.p-home-section-hero__title-image')!;
-    const pixcelateEffect = new PixelateEffect({ size: 10 });
-    const bloomEffect = new BloomEffect({ intensity: 5 });
-    const opacityEffect = new OpacityEffect({ opacity: getComputedOpacity(heroTitleElement) });
     vfx.add(heroTitleImageElement, {
-      effect: [pixcelateEffect, bloomEffect, opacityEffect],
+      shader: [
+        { frag: shaders.halftone },
+        createOpacityPass(() => getComputedOpacity(heroTitleElement)),
+      ],
       zIndex: 2,
     });
-    setInterval(() => {
-      pixcelateEffect.setParams({
-        size: Math.round(window.innerWidth / 100),
-      });
-      opacityEffect.setParams({
-        opacity: getComputedOpacity(heroTitleElement),
-      });
-    }, 10);
   }
 
 
