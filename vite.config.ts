@@ -7,6 +7,7 @@ const outDir = resolve(__dirname, 'dist');
 export default defineConfig({
   base: "./",
 	root,
+  publicDir: resolve(__dirname, 'public'),
   build:{
     outDir,
     rolldownOptions:{
